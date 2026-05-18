@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A&R QR Standee Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple-deep:    #0d0818;
+  --purple-dark:    #160d2e;
+  --purple-mid:     #2a1458;
+  --purple-bright:  #4a1fa8;
+  --violet:         #6b2fc0;
+  --violet-light:   #9b59d0;
+  --gold:           #d4a017;
+  --gold-bright:    #f0c040;
+  --gold-light:     #ffe080;
+  --cream:          #f5e6b8;
+  --text-main:      #f0e8ff;
+  --text-muted:     #b8a0d8;
+  --border-gold:    rgba(212,160,23,0.55);
+  --border-purple:  rgba(155,89,208,0.4);
+  --glow-purple:    rgba(107,47,192,0.35);
+  --glow-gold:      rgba(212,160,23,0.3);
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background: var(--purple-deep);
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  background-image:
+    radial-gradient(ellipse 600px 400px at 20% 10%, rgba(107,47,192,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 80% 80%, rgba(212,160,23,0.08) 0%, transparent 70%);
+}
+
+/* ─── CONTROLS ─── */
+.controls-panel {
+  background: linear-gradient(160deg, #1a0d38 0%, #130926 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 18px;
+  padding: 22px;
+  width: 300px;
+  flex-shrink: 0;
+  color: var(--text-main);
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-gold) transparent;
+  box-shadow: 0 8px 40px rgba(107,47,192,0.25), inset 0 1px 0 rgba(212,160,23,0.1);
+}
+.controls-panel::-webkit-scrollbar { width: 4px; }
+.controls-panel::-webkit-scrollbar-thumb { background: var(--border-gold); border-radius: 4px; }
+
+.controls-panel h3 {
+  color: var(--gold-bright);
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(212,160,23,0.25);
+  padding-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.field-group { margin-bottom: 14px; }
+.field-group label {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.field-group input, .field-group textarea {
+  width: 100%;
+  background: rgba(42,20,88,0.6);
+  border: 1px solid var(--border-purple);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--text-main);
+  font-size: 12px;
+  font-family: 'Raleway', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field-group input:focus, .field-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(212,160,23,0.15);
+}
+.field-group textarea { height: 52px; resize: none; }
+
+/* ─── UPLOAD AREA ─── */
+.upload-area {
+  width: 100%;
+  border: 2px dashed rgba(155,89,208,0.5);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: rgba(42,20,88,0.25);
+  position: relative;
+}
+.upload-area:hover, .upload-area.drag-over {
+  border-color: var(--gold);
+  background: rgba(212,160,23,0.06);
+}
+.upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+}
+.upload-icon { font-size: 22px; margin-bottom: 6px; }
+.upload-hint { font-size: 10px; color: var(--text-muted); line-height: 1.6; pointer-events: none; }
+.upload-hint strong { color: var(--gold-bright); }
+
+.upload-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.thumb-wrap {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(212,160,23,0.3);
+}
+.thumb-wrap img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+.thumb-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background: rgba(180,0,80,0.9);
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  font-size: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ─── LOGO UPLOAD ─── */
+.logo-upload-area {
+  width: 100%;
+  border: 2px dashed rgba(155,89,208,0.5);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: rgba(42,20,88,0.25);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-upload-area:hover { border-color: var(--gold); background: rgba(212,160,23,0.06); }
+.logo-upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: none;
+}
+.logo-preview-img {
+  width: 54px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+  display: none;
+  border: 1px solid rgba(212,160,23,0.3);
+  background: rgba(255,255,255,0.05);
+}
+.logo-upload-text { font-size: 10px; color: var(--text-muted); pointer-events: none; }
+
+/* ─── BUTTONS ─── */
+.btn-generate {
+  width: 100%;
+  background: linear-gradient(135deg, #4a1fa8, #7c35d4, #d4a017, #f0c040);
+  background-size: 200% 200%;
+  animation: gradShift 4s ease infinite;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+  margin-top: 6px;
+  transition: opacity 0.2s, transform 0.1s;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 20px rgba(107,47,192,0.4);
+  font-family: 'Cinzel', serif;
+}
+@keyframes gradShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.btn-generate:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-generate:active { transform: scale(0.98); }
+
+.btn-download {
+  width: 100%;
+  background: rgba(42,20,88,0.5);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--gold-bright);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  margin-top: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Raleway', sans-serif;
+}
+.btn-download:hover { background: rgba(212,160,23,0.12); box-shadow: 0 0 12px rgba(212,160,23,0.2); }
+.btn-download:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-row { display: flex; gap: 8px; margin-top: 8px; }
+.btn-row .btn-download { margin-top: 0; flex: 1; font-size: 11px; padding: 10px 6px; }
+
+/* ─── PREVIEW ─── */
+.preview-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.preview-label {
+  color: var(--gold-bright);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  font-family: 'Cinzel', serif;
+}
+.standee-wrapper {
+  position: relative;
+  width: 360px;
+  box-shadow:
+    0 0 50px rgba(107,47,192,0.4),
+    0 0 100px rgba(107,47,192,0.2),
+    0 0 20px rgba(212,160,23,0.2);
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+/* ─── STANDEE ─── */
+.standee {
+  width: 360px;
+  min-height: 720px;
+  background: linear-gradient(160deg,
+    #060312 0%,
+    #0d0820 12%,
+    #160d38 25%,
+    #1e1048 40%,
+    #160d38 58%,
+    #0d0820 78%,
+    #060312 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 24px 0;
+  font-family: 'Raleway', sans-serif;
+  overflow: hidden;
+  border: 1.5px solid rgba(212,160,23,0.6);
+  border-radius: 22px;
+}
+
+/* Ambient BG orbs */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ─── HEADER ─── */
+.header-section {
+  width: 100%;
+  text-align: center;
+  padding: 28px 20px 18px;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(107,47,192,0.14) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(212,160,23,0.18);
+}
+.scan-connect {
+  font-family: 'Cinzel', serif;
+  font-size: 26px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-bright) 70%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  filter: drop-shadow(0 2px 8px rgba(212,160,23,0.4));
+}
+.subtitle {
+  font-size: 10px;
+  color: var(--violet-light);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  font-weight: 400;
+}
+.shop-name {
+  font-size: 14px;
+  color: var(--cream);
+  font-weight: 600;
+  margin-top: 10px;
+  padding: 5px 18px;
+  background: rgba(107,47,192,0.2);
+  border-radius: 50px;
+  border: 1px solid rgba(212,160,23,0.35);
+  display: inline-block;
+  letter-spacing: 2px;
+  font-family: 'Cinzel', serif;
+}
+
+/* ─── QR ─── */
+.qr-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px 12px;
+  position: relative;
+  z-index: 2;
+}
+.qr-card {
+  background: rgba(30,16,72,0.7);
+  border: 1.5px solid rgba(212,160,23,0.55);
+  border-radius: 24px;
+  padding: 18px;
+  position: relative;
+  box-shadow:
+    0 0 30px rgba(107,47,192,0.4),
+    0 0 60px rgba(107,47,192,0.15),
+    inset 0 0 20px rgba(107,47,192,0.08);
+  backdrop-filter: blur(10px);
+}
+.qr-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 32px;
+  background: radial-gradient(ellipse, rgba(107,47,192,0.25) 0%, rgba(212,160,23,0.1) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+.qr-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: var(--gold-bright);
+  border-style: solid;
+}
+.qr-corner.tl { top:-1px; left:-1px; border-width:3px 0 0 3px; border-radius:6px 0 0 0; }
+.qr-corner.tr { top:-1px; right:-1px; border-width:3px 3px 0 0; border-radius:0 6px 0 0; }
+.qr-corner.bl { bottom:-1px; left:-1px; border-width:0 0 3px 3px; border-radius:0 0 0 6px; }
+.qr-corner.br { bottom:-1px; right:-1px; border-width:0 3px 3px 0; border-radius:0 0 6px 0; }
+.qr-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 12px;
+  display: block;
+  image-rendering: pixelated;
+}
+.scan-now {
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: var(--gold-bright);
+  font-weight: 700;
+  margin-top: 14px;
+  text-transform: uppercase;
+  font-family: 'Cinzel', serif;
+}
+
+/* ─── ICONS ─── */
+.icons-section {
+  width: 100%;
+  padding: 6px 10px 14px;
+  position: relative;
+  z-index: 2;
+}
+.icons-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;
+}
+.icons-row::-webkit-scrollbar { display: none; }
+.icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2a1458, #4a1fa8, #6b2fc0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  box-shadow:
+    0 4px 14px rgba(107,47,192,0.5),
+    0 0 0 1px rgba(212,160,23,0.3);
+  border: 1px solid rgba(212,160,23,0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.icon-circle:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 20px rgba(107,47,192,0.7), 0 0 0 1px var(--gold);
+}
+.icon-label {
+  font-size: 7.5px;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* ─── DIVIDER ─── */
+.gold-divider {
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,160,23,0.5), var(--violet-light), rgba(212,160,23,0.5), transparent);
+  margin: 4px auto;
+}
+
+/* ─── REVIEW ─── */
+.review-section {
+  width: calc(100% - 32px);
+  margin: 0 16px;
+  background: rgba(42,20,88,0.35);
+  border: 1px solid rgba(212,160,23,0.25);
+  border-radius: 16px;
+  padding: 14px 16px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(4px);
+}
+.review-text {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-weight: 400;
+}
+.stars {
+  font-size: 18px;
+  margin-top: 8px;
+  filter: drop-shadow(0 0 8px rgba(212,160,23,0.7));
+}
+
+/* ─── GALLERY ─── */
+.gallery-section {
+  width: 100%;
+  padding: 14px 16px 8px;
+  position: relative;
+  z-index: 2;
+}
+.gallery-label {
+  font-size: 9px;
+  letter-spacing: 3.5px;
+  color: var(--gold);
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  opacity: 0.8;
+  font-family: 'Cinzel', serif;
+}
+.gallery-row {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+}
+.gallery-item {
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
+  background: rgba(42,20,88,0.4);
+  border: 1px solid rgba(107,47,192,0.4);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: rgba(155,89,208,0.5);
+  transition: border-color 0.2s;
+}
+.gallery-item:hover { border-color: var(--gold); }
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9px;
+}
+
+/* ─── FOOTER ─── */
+.footer-section {
+  width: 100%;
+  padding: 16px 20px 10px;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(0deg, rgba(107,47,192,0.12) 0%, transparent 100%);
+  border-top: 1px solid rgba(212,160,23,0.18);
+  text-align: center;
+  margin-top: 6px;
+}
+.powered-by {
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: rgba(155,89,208,0.5);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-family: 'Cinzel', serif;
+}
+.logo-placeholder {
+  width: 90px;
+  height: 44px;
+  background: rgba(42,20,88,0.4);
+  border: 1px solid rgba(212,160,23,0.3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--gold-bright);
+  margin: 0 auto 10px;
+  letter-spacing: 2px;
+  overflow: hidden;
+  font-family: 'Cinzel', serif;
+  box-shadow: 0 0 12px rgba(107,47,192,0.2);
+}
+.logo-placeholder img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: none;
+}
+.brand-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-bright));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 3px;
+  filter: drop-shadow(0 1px 6px rgba(212,160,23,0.4));
+}
+.contact-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+.contact-item { display: flex; align-items: center; gap: 4px; }
+.contact-icon { font-size: 11px; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(70px);
+  background: linear-gradient(135deg, #4a1fa8, #d4a017);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 28px;
+  border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(107,47,192,0.5);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 9999;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  font-family: 'Raleway', sans-serif;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 720px) {
+  body { flex-direction: column; align-items: center; padding: 12px; gap: 16px; }
+  .controls-panel { position: static; width: 100%; max-width: 360px; max-height: none; }
+  .standee-wrapper, .standee { width: 320px; }
+  .qr-img { width: 155px; height: 155px; }
+  .gallery-item { width: 50px; height: 50px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ CONTROLS ═══════════════ -->
+<div class="controls-panel">
+  <h3>⚡ Standee Data</h3>
+
+  <div class="field-group">
+    <label>Shop Name</label>
+    <input type="text" id="inp-shop" placeholder="e.g. A&R Mobile Store" value="A&R Mobile Store">
+  </div>
+
+  <div class="field-group">
+    <label>QR Code Link</label>
+    <input type="text" id="inp-qr" placeholder="https://wa.me/91..." value="https://wa.me/919876543210">
+  </div>
+
+  <div class="field-group">
+    <label>Product Images (Upload / Drag & Drop)</label>
+    <div class="upload-area" id="product-upload-area">
+      <input type="file" id="product-file-input" accept="image/*" multiple>
+      <div class="upload-icon">🖼️</div>
+      <div class="upload-hint">
+        <strong>Tap to upload</strong> or Drag & Drop<br>
+        JPG, PNG, WebP · Max 5 images
+      </div>
+      <div class="upload-preview-grid" id="product-preview-grid"></div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>Brand Logo (Upload – transparent PNG best)</label>
+    <div class="logo-upload-area" id="logo-upload-area">
+      <input type="file" id="logo-file-input" accept="image/*">
+      <img id="logo-preview-ctrl" class="logo-preview-img" src="" alt="Logo Preview">
+      <div class="logo-upload-text" id="logo-upload-text">🏷️ Tap to upload logo</div>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>Brand Name (if no logo image)</label>
+    <input type="text" id="inp-brand" placeholder="Your Brand" value="A&R Accessories">
+  </div>
+
+  <div class="field-group">
+    <label>Support Phone</label>
+    <input type="text" id="inp-phone" placeholder="+91 98765 43210" value="+91 98765 43210">
+  </div>
+
+  <div class="field-group">
+    <label>Support Email</label>
+    <input type="text" id="inp-email" placeholder="support@yourbrand.com" value="support@arbrand.com">
+  </div>
+
+  <button class="btn-generate" onclick="renderStandee()">✦ GENERATE STANDEE ✦</button>
+
+  <div class="btn-row">
+    <button class="btn-download" id="btn-png" onclick="downloadPNG()">⬇ PNG</button>
+    <button class="btn-download" id="btn-pdf" onclick="downloadPDF()">📄 PDF</button>
+  </div>
+</div>
+
+<!-- ═══════════════ PREVIEW ═══════════════ -->
+<div class="preview-area">
+  <div class="preview-label">STANDEE PREVIEW — 3ft × 6ft (1:2 ratio)</div>
+  <div class="standee-wrapper">
+    <div class="standee" id="standee">
+
+      <!-- BG Orbs -->
+      <div class="bg-orb" style="width:320px;height:320px;top:-90px;right:-90px;background:radial-gradient(circle,rgba(107,47,192,0.12),transparent 70%);"></div>
+      <div class="bg-orb" style="width:220px;height:220px;bottom:220px;left:-70px;background:radial-gradient(circle,rgba(74,31,168,0.1),transparent 70%);"></div>
+      <div class="bg-orb" style="width:160px;height:160px;bottom:90px;right:10px;background:radial-gradient(circle,rgba(212,160,23,0.07),transparent 70%);"></div>
+
+      <!-- HEADER -->
+      <div class="header-section">
+        <div class="scan-connect">Scan & Connect</div>
+        <div class="subtitle">Everything in 1 Tap</div>
+        <div class="shop-name" id="disp-shop">A&amp;R Mobile Store</div>
+      </div>
+
+      <!-- QR -->
+      <div class="qr-section">
+        <div class="qr-card">
+          <div class="qr-glow"></div>
+          <div class="qr-corner tl"></div>
+          <div class="qr-corner tr"></div>
+          <div class="qr-corner bl"></div>
+          <div class="qr-corner br"></div>
+          <img class="qr-img" id="qr-img"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https://wa.me/919876543210&bgcolor=0d0818&color=d4a017&margin=10"
+            crossorigin="anonymous"
+            alt="QR Code">
+        </div>
+        <div class="scan-now">◈ Scan Now ◈</div>
+      </div>
+
+      <!-- ICONS -->
+      <div class="icons-section">
+        <div class="icons-row" id="standee-icons">
+          <div class="icon-btn"><div class="icon-circle">📞</div><div class="icon-label">Call</div></div>
+          <div class="icon-btn"><div class="icon-circle">💬</div><div class="icon-label">WhatsApp</div></div>
+          <div class="icon-btn"><div class="icon-circle">💳</div><div class="icon-label">Payment</div></div>
+          <div class="icon-btn"><div class="icon-circle">🌐</div><div class="icon-label">Website</div></div>
+          <div class="icon-btn"><div class="icon-circle">📷</div><div class="icon-label">Camera</div></div>
+          <div class="icon-btn"><div class="icon-circle">👍</div><div class="icon-label">Like</div></div>
+          <div class="icon-btn"><div class="icon-circle">⭐</div><div class="icon-label">Review</div></div>
+        </div>
+      </div>
+
+      <div class="gold-divider"></div>
+
+      <!-- REVIEW -->
+      <div class="review-section">
+        <div class="review-text">Aapka feedback aur review<br>humare liye important hai</div>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+      </div>
+
+      <!-- GALLERY -->
+      <div class="gallery-section">
+        <div class="gallery-label">◈ Product Gallery ◈</div>
+        <div class="gallery-row" id="gallery-row">
+          <div class="gallery-item">📱</div>
+          <div class="gallery-item">🔋</div>
+          <div class="gallery-item">🎧</div>
+          <div class="gallery-item">💡</div>
+          <div class="gallery-item">🔌</div>
+        </div>
+      </div>
+
+      <div class="gold-divider" style="margin-top:8px;"></div>
+
+      <!-- FOOTER -->
+      <div class="footer-section">
+        <div class="powered-by">Powered By</div>
+        <div class="logo-placeholder" id="logo-placeholder">
+          <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
+          <span id="logo-text">A&amp;R</span>
+        </div>
+        <div class="brand-logo" id="disp-brand">A&R Accessories</div>
+        <div class="contact-row">
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <span id="disp-phone">+91 98765 43210</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <span id="disp-email">support@arbrand.com</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="color:rgba(155,89,208,0.4);font-size:10px;letter-spacing:2px;text-align:center;font-family:'Cinzel',serif;">Scale: 1:5 preview of actual print size</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── STATE ─── */
+let uploadedProductDataURLs = [];
+let uploadedLogoDataURL = null;
+
+/* ─── TOAST ─── */
+function showToast(msg, duration = 2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+/* ─── PRODUCT UPLOAD ─── */
+const productInput = document.getElementById('product-file-input');
+const productUploadArea = document.getElementById('product-upload-area');
+const productPreviewGrid = document.getElementById('product-preview-grid');
+
+productInput.addEventListener('change', (e) => handleProductFiles(e.target.files));
+
+productUploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  productUploadArea.classList.add('drag-over');
+});
+productUploadArea.addEventListener('dragleave', () => productUploadArea.classList.remove('drag-over'));
+productUploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  productUploadArea.classList.remove('drag-over');
+  handleProductFiles(e.dataTransfer.files);
+});
+
+function handleProductFiles(files) {
+  const remaining = 5 - uploadedProductDataURLs.length;
+  if (remaining <= 0) { showToast('⚠️ Max 5 images allowed'); return; }
+  const toProcess = Array.from(files).slice(0, remaining);
+  let processed = 0;
+  toProcess.forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      uploadedProductDataURLs.push(e.target.result);
+      processed++;
+      if (processed === toProcess.length) renderProductPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderProductPreviews() {
+  productPreviewGrid.innerHTML = '';
+  uploadedProductDataURLs.forEach((src, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'thumb-wrap';
+    const img = document.createElement('img');
+    img.src = src;
+    const btn = document.createElement('button');
+    btn.className = 'thumb-remove';
+    btn.textContent = '✕';
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      uploadedProductDataURLs.splice(idx, 1);
+      renderProductPreviews();
+    };
+    wrap.appendChild(img);
+    wrap.appendChild(btn);
+    productPreviewGrid.appendChild(wrap);
+  });
+}
+
+/* ─── LOGO UPLOAD ─── */
+const logoInput = document.getElementById('logo-file-input');
+const logoPreviewCtrl = document.getElementById('logo-preview-ctrl');
+const logoUploadText = document.getElementById('logo-upload-text');
+
+logoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    uploadedLogoDataURL = ev.target.result;
+    logoPreviewCtrl.src = uploadedLogoDataURL;
+    logoPreviewCtrl.style.display = 'block';
+    logoUploadText.textContent = '✅ Logo uploaded';
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ─── RENDER STANDEE ─── */
+function renderStandee() {
+  const shop  = document.getElementById('inp-shop').value.trim();
+  const qrLink = document.getElementById('inp-qr').value.trim() || 'https://example.com';
+  const brand = document.getElementById('inp-brand').value.trim();
+  const phone = document.getElementById('inp-phone').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+
+  // Shop name
+  const shopEl = document.getElementById('disp-shop');
+  shopEl.textContent = shop || 'Your Shop';
+  shopEl.style.display = shop ? 'inline-block' : 'none';
+
+  // QR (purple/gold theme)
+  const qrImg = document.getElementById('qr-img');
+  const encoded = encodeURIComponent(qrLink);
+  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encoded}&bgcolor=0d0818&color=d4a017&margin=10`;
+
+  // Gallery
+  const galleryRow = document.getElementById('gallery-row');
+  const emojis = ['📱','🔋','🎧','💡','🔌'];
+  galleryRow.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const div = document.createElement('div');
+    div.className = 'gallery-item';
+    if (uploadedProductDataURLs[i]) {
+      const img = document.createElement('img');
+      img.src = uploadedProductDataURLs[i];
+      div.appendChild(img);
+    } else {
+      div.textContent = emojis[i];
+    }
+    galleryRow.appendChild(div);
+  }
+
+  // Logo
+  const standeeLogoImg = document.getElementById('logo-standee-img');
+  const logoText = document.getElementById('logo-text');
+  if (uploadedLogoDataURL) {
+    standeeLogoImg.src = uploadedLogoDataURL;
+    standeeLogoImg.style.display = 'block';
+    logoText.style.display = 'none';
+  } else {
+    standeeLogoImg.style.display = 'none';
+    logoText.style.display = 'block';
+  }
+
+  // Brand / contact
+  document.getElementById('disp-brand').textContent = brand || 'A&R Accessories';
+  document.getElementById('disp-phone').textContent = phone || '';
+  document.getElementById('disp-email').textContent = email || '';
+
+  showToast('✅ Standee Updated!');
+}
+
+/* ─── LOAD LIBRARY ─── */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`) && window._libLoaded?.[src]) {
+      resolve(); return;
+    }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => { if (!window._libLoaded) window._libLoaded = {}; window._libLoaded[src] = true; resolve(); };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+/* ─── CAPTURE STANDEE ─── */
+async function captureStandee() {
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+
+  const standee = document.getElementById('standee');
+
+  // Wait for QR image to load
+  await new Promise(resolve => {
+    const img = document.getElementById('qr-img');
+    if (img.complete && img.naturalHeight !== 0) { resolve(); return; }
+    img.onload = resolve;
+    img.onerror = resolve;
+    setTimeout(resolve, 3000);
+  });
+
+  const canvas = await html2canvas(standee, {
+    scale: 3,
+    useCORS: true,
+    allowTaint: false,
+    backgroundColor: '#060312',
+    logging: false,
+    width: standee.offsetWidth,
+    height: standee.scrollHeight,
+    windowWidth: standee.offsetWidth,
+    windowHeight: standee.scrollHeight
+  });
+  return canvas;
+}
+
+/* ─── DOWNLOAD PNG ─── */
+async function downloadPNG() {
+  const btn = document.getElementById('btn-png');
+  btn.disabled = true;
+  btn.textContent = '⏳ Capturing…';
+  showToast('⏳ Generating PNG…', 6000);
+  try {
+    const canvas = await captureStandee();
+    const link = document.createElement('a');
+    link.download = 'AR-standee.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('✅ PNG Downloaded!');
+  } catch (e) {
+    console.error(e);
+    showToast('❌ Error. Try Ctrl+P to print.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⬇ PNG';
+  }
+}
+
+/* ─── DOWNLOAD PDF ─── */
+async function downloadPDF() {
+  const btn = document.getElementById('btn-pdf');
+  btn.disabled = true;
+  btn.textContent = '⏳ Building…';
+  showToast('⏳ Generating PDF…', 7000);
+  try {
+    const canvas = await captureStandee();
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+
+    // 3ft × 6ft = 90mm × 180mm
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [90, 180]
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, 90, 180);
+    pdf.save('AR-standee.pdf');
+    showToast('✅ PDF Downloaded!');
+  } catch (e) {
+    console.error(e);
+    showToast('❌ Error generating PDF');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📄 PDF';
+  }
+}
+
+/* ─── INIT ─── */
+renderStandee();
+</script>
+</body>
+</html>
