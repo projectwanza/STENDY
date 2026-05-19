@@ -17,14 +17,14 @@
   --orange-pale:    #fff8f2;
   --orange-accent:  #ffb347;
   --orange-muted:   rgba(255,107,0,0.12);
-  --text-dark:      #2b1a0e;
-  --text-mid:       #5a3e28;
-  --text-muted:     #9a7a60;
+  --text-dark:      #333333;
+  --text-mid:       #555555;
+  --text-muted:     #666666;
   --white:          #ffffff;
-  --border:         rgba(255,107,0,0.22);
-  --shadow-sm:      0 2px 10px rgba(255,107,0,0.12);
-  --shadow-md:      0 6px 24px rgba(255,107,0,0.18);
-  --shadow-lg:      0 12px 40px rgba(255,107,0,0.22);
+  --border:         rgba(255,107,0,0.20);
+  --shadow-sm:      0 2px 10px rgba(255,107,0,0.10);
+  --shadow-md:      0 6px 24px rgba(255,107,0,0.16);
+  --shadow-lg:      0 12px 40px rgba(255,107,0,0.20);
 }
 
 body {
@@ -96,7 +96,7 @@ body {
 }
 .field-group input:focus, .field-group textarea:focus {
   border-color: var(--orange);
-  box-shadow: 0 0 0 3px rgba(255,107,0,0.1);
+  box-shadow: 0 0 0 3px rgba(255,107,0,0.10);
 }
 .field-group textarea { height: 52px; resize: none; }
 
@@ -105,7 +105,7 @@ body {
   width: 100%;
   border: 2px dashed rgba(255,107,0,0.35);
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s;
@@ -127,7 +127,7 @@ body {
   padding: 0;
   background: none;
 }
-.upload-icon { font-size: 22px; margin-bottom: 6px; }
+.upload-icon { font-size: 20px; margin-bottom: 5px; }
 .upload-hint { font-size: 10px; color: var(--text-muted); line-height: 1.6; pointer-events: none; }
 .upload-hint strong { color: var(--orange); }
 
@@ -151,10 +151,8 @@ body {
 }
 .thumb-remove {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 16px;
-  height: 16px;
+  top: 2px; right: 2px;
+  width: 16px; height: 16px;
   background: rgba(230,81,0,0.9);
   border-radius: 50%;
   border: none;
@@ -191,13 +189,10 @@ body {
   cursor: pointer;
   width: 100%;
   height: 100%;
-  border: none;
-  padding: 0;
-  background: none;
+  border: none; padding: 0; background: none;
 }
 .logo-preview-img {
-  width: 54px;
-  height: 32px;
+  width: 54px; height: 32px;
   object-fit: contain;
   border-radius: 4px;
   display: none;
@@ -278,20 +273,20 @@ body {
 }
 .standee-wrapper {
   position: relative;
-  width: 360px;
+  width: 340px;
   box-shadow:
-    0 4px 30px rgba(255,107,0,0.18),
-    0 12px 50px rgba(255,107,0,0.1),
-    0 2px 8px rgba(0,0,0,0.06);
+    0 4px 30px rgba(255,107,0,0.16),
+    0 10px 46px rgba(255,107,0,0.10),
+    0 2px 8px rgba(0,0,0,0.05);
   border-radius: 20px;
   overflow: hidden;
 }
 
-/* ═══════════════════════════════════════
-   STANDEE — COMPACT ORANGE/WHITE DESIGN
-   ═══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   STANDEE — REDESIGNED COMPACT LAYOUT
+   ══════════════════════════════════════ */
 .standee {
-  width: 360px;
+  width: 340px;
   background: #ffffff;
   position: relative;
   display: flex;
@@ -299,14 +294,14 @@ body {
   align-items: center;
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
-  border: 1.5px solid rgba(255,107,0,0.25);
+  border: 1.5px solid rgba(255,107,0,0.20);
   border-radius: 20px;
 }
 
 /* ─── TOP STRIPE ─── */
 .top-stripe {
   width: 100%;
-  height: 6px;
+  height: 5px;
   background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-light), var(--orange-accent), var(--orange));
   background-size: 200% 100%;
   animation: stripeMove 3s linear infinite;
@@ -317,71 +312,26 @@ body {
   100% { background-position: 200% 0%; }
 }
 
-/* ─── HEADER ─── */
+/* ─── COMPACT HEADER (no logo, just shop name + tagline) ─── */
 .header-section {
   width: 100%;
   text-align: center;
-  padding: 18px 20px 16px;
+  padding: 14px 20px 12px;
+  background: linear-gradient(170deg, var(--orange-bg) 0%, #ffffff 100%);
+  border-bottom: 1.5px solid rgba(255,107,0,0.10);
   position: relative;
   z-index: 2;
-  background: linear-gradient(170deg, var(--orange-bg) 0%, #ffffff 100%);
-  border-bottom: 1.5px solid rgba(255,107,0,0.12);
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-.header-logo-side {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.logo-placeholder {
-  width: 60px;
-  height: 36px;
-  background: var(--orange-bg);
-  border: 1.5px solid rgba(255,107,0,0.3);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  color: var(--orange);
-  overflow: hidden;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  letter-spacing: 1px;
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
-}
-.logo-placeholder img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  display: none;
-}
-.header-divider {
-  width: 1.5px;
-  height: 44px;
-  background: linear-gradient(180deg, transparent, rgba(255,107,0,0.3), transparent);
-  flex-shrink: 0;
-}
-.header-text-side {
-  text-align: left;
-  flex: 1;
 }
 .scan-connect {
   font-family: 'Nunito', sans-serif;
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--orange);
   letter-spacing: 0.5px;
   line-height: 1.1;
 }
 .subtitle {
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--text-muted);
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -390,119 +340,119 @@ body {
 }
 .shop-name-pill {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--white);
   font-weight: 700;
-  margin-top: 6px;
-  padding: 3px 12px;
+  margin-top: 7px;
+  padding: 3px 14px;
   background: linear-gradient(90deg, var(--orange-dark), var(--orange));
   border-radius: 50px;
   letter-spacing: 1px;
   font-family: 'Nunito', sans-serif;
-  box-shadow: 0 2px 8px rgba(255,107,0,0.3);
+  box-shadow: 0 2px 8px rgba(255,107,0,0.30);
 }
 
-/* ─── BODY WRAPPER ─── */
+/* ─── BODY ─── */
 .standee-body {
   width: 100%;
-  padding: 14px 16px 0;
+  padding: 12px 14px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-/* ─── QR ─── */
+/* ─── QR SECTION (centered, scan now above) ─── */
 .qr-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
   width: 100%;
   background: var(--orange-pale);
-  border: 1.5px solid rgba(255,107,0,0.2);
+  border: 1.5px solid rgba(255,107,0,0.18);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 14px 16px 16px;
   box-shadow: var(--shadow-sm);
+  gap: 10px;
 }
+
+/* SCAN NOW badge — sits above QR */
+.scan-now-badge {
+  background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+  color: var(--white);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 6px 22px;
+  border-radius: 50px;
+  letter-spacing: 2px;
+  font-family: 'Nunito', sans-serif;
+  box-shadow: 0 3px 12px rgba(255,107,0,0.38);
+  text-align: center;
+}
+
+/* Centered QR card */
 .qr-card {
   position: relative;
-  flex-shrink: 0;
-  padding: 8px;
+  padding: 9px;
   background: var(--white);
-  border-radius: 14px;
-  border: 2px solid rgba(255,107,0,0.35);
-  box-shadow: 0 4px 16px rgba(255,107,0,0.15);
+  border-radius: 16px;
+  border: 2px solid rgba(255,107,0,0.32);
+  box-shadow: 0 5px 20px rgba(255,107,0,0.14);
 }
 .qr-corner {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 14px; height: 14px;
   border-color: var(--orange);
   border-style: solid;
 }
-.qr-corner.tl { top:-1px; left:-1px; border-width:2.5px 0 0 2.5px; border-radius:5px 0 0 0; }
+.qr-corner.tl { top:-1px; left:-1px;  border-width:2.5px 0 0 2.5px; border-radius:5px 0 0 0; }
 .qr-corner.tr { top:-1px; right:-1px; border-width:2.5px 2.5px 0 0; border-radius:0 5px 0 0; }
-.qr-corner.bl { bottom:-1px; left:-1px; border-width:0 0 2.5px 2.5px; border-radius:0 0 0 5px; }
+.qr-corner.bl { bottom:-1px; left:-1px;  border-width:0 0 2.5px 2.5px; border-radius:0 0 0 5px; }
 .qr-corner.br { bottom:-1px; right:-1px; border-width:0 2.5px 2.5px 0; border-radius:0 0 5px 0; }
 .qr-img {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 8px;
   display: block;
   image-rendering: pixelated;
 }
-.qr-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-.scan-now-badge {
-  background: linear-gradient(135deg, var(--orange-dark), var(--orange));
-  color: var(--white);
-  font-size: 11px;
-  font-weight: 800;
-  padding: 5px 14px;
-  border-radius: 50px;
-  letter-spacing: 1.5px;
-  font-family: 'Nunito', sans-serif;
-  box-shadow: 0 3px 10px rgba(255,107,0,0.35);
-}
-.qr-tagline {
-  font-size: 11px;
-  color: var(--text-mid);
+
+/* small sub-hint below QR */
+.qr-sub {
+  font-size: 10px;
+  color: var(--text-muted);
   font-weight: 600;
-  line-height: 1.45;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
-.qr-tagline span {
-  color: var(--orange);
-  font-weight: 700;
+.qr-sub .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--orange);
+  animation: pulse 1.5s ease-in-out infinite;
 }
-.qr-arrow {
-  font-size: 22px;
-  animation: bounceLeft 1.2s ease-in-out infinite;
-}
-@keyframes bounceLeft {
-  0%, 100% { transform: translateX(0); }
-  50%       { transform: translateX(-4px); }
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.5; transform:scale(0.7); }
 }
 
 /* ─── ICONS ─── */
 .icons-section {
   width: 100%;
   background: var(--white);
-  border: 1.5px solid rgba(255,107,0,0.15);
+  border: 1.5px solid rgba(255,107,0,0.13);
   border-radius: 14px;
-  padding: 12px 10px 10px;
+  padding: 10px 10px 9px;
 }
 .icons-label {
-  font-size: 8px;
+  font-size: 7.5px;
   letter-spacing: 3px;
   color: var(--orange-dark);
   text-align: center;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 9px;
   font-weight: 700;
   font-family: 'Nunito', sans-serif;
 }
@@ -510,7 +460,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
@@ -522,30 +472,29 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   flex-shrink: 0;
 }
 .icon-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 38px; height: 38px;
+  border-radius: 11px;
   background: var(--orange-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  border: 1.5px solid rgba(255,107,0,0.25);
-  box-shadow: 0 2px 8px rgba(255,107,0,0.1);
+  font-size: 15px;
+  border: 1.5px solid rgba(255,107,0,0.22);
+  box-shadow: 0 2px 7px rgba(255,107,0,0.09);
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
 }
 .icon-circle:hover {
   transform: translateY(-2px);
   background: var(--orange-bg);
-  box-shadow: 0 5px 14px rgba(255,107,0,0.25);
+  box-shadow: 0 5px 14px rgba(255,107,0,0.24);
   border-color: var(--orange);
 }
 .icon-label {
-  font-size: 7.5px;
+  font-size: 7px;
   color: var(--text-muted);
   text-align: center;
   letter-spacing: 0.3px;
@@ -558,7 +507,7 @@ body {
 .orange-divider {
   width: 100%;
   height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255,107,0,0.3), rgba(255,179,71,0.5), rgba(255,107,0,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,107,0,0.28), rgba(255,179,71,0.48), rgba(255,107,0,0.28), transparent);
   border-radius: 2px;
 }
 
@@ -566,22 +515,22 @@ body {
 .review-section {
   width: 100%;
   background: linear-gradient(135deg, var(--orange-bg) 0%, #fff9f4 100%);
-  border: 1.5px solid rgba(255,107,0,0.2);
+  border: 1.5px solid rgba(255,107,0,0.18);
   border-radius: 14px;
-  padding: 12px 16px;
+  padding: 10px 16px;
   text-align: center;
 }
 .review-text {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--text-mid);
-  line-height: 1.55;
+  line-height: 1.5;
   font-weight: 500;
 }
 .review-text strong { color: var(--orange-dark); }
 .stars {
-  font-size: 17px;
-  margin-top: 6px;
-  filter: drop-shadow(0 1px 5px rgba(255,107,0,0.5));
+  font-size: 16px;
+  margin-top: 5px;
+  filter: drop-shadow(0 1px 5px rgba(255,107,0,0.45));
   letter-spacing: 2px;
 }
 
@@ -589,46 +538,44 @@ body {
 .gallery-section {
   width: 100%;
   background: var(--white);
-  border: 1.5px solid rgba(255,107,0,0.15);
+  border: 1.5px solid rgba(255,107,0,0.13);
   border-radius: 14px;
-  padding: 12px 12px 10px;
+  padding: 10px 10px 9px;
 }
 .gallery-label {
-  font-size: 8px;
+  font-size: 7.5px;
   letter-spacing: 3px;
   color: var(--orange-dark);
   text-align: center;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 9px;
   font-weight: 700;
   font-family: 'Nunito', sans-serif;
 }
 .gallery-row {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   justify-content: center;
 }
 .gallery-item {
-  width: 56px;
-  height: 56px;
+  width: 52px; height: 52px;
   border-radius: 10px;
   background: var(--orange-pale);
-  border: 1.5px solid rgba(255,107,0,0.2);
+  border: 1.5px solid rgba(255,107,0,0.18);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
 }
 .gallery-item:hover {
   border-color: var(--orange);
-  box-shadow: 0 3px 10px rgba(255,107,0,0.2);
+  box-shadow: 0 3px 10px rgba(255,107,0,0.18);
   transform: translateY(-2px);
 }
 .gallery-item img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   border-radius: 9px;
 }
@@ -636,14 +583,14 @@ body {
 /* ─── FOOTER ─── */
 .footer-section {
   width: 100%;
-  background: linear-gradient(170deg, var(--orange-bg) 0%, #fff8f2 100%);
-  border-top: 1.5px solid rgba(255,107,0,0.15);
-  padding: 12px 20px 16px;
+  background: linear-gradient(170deg, var(--orange-bg) 0%, #fff9f4 100%);
+  border-top: 1.5px solid rgba(255,107,0,0.12);
+  padding: 10px 20px 14px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 .powered-row {
   display: flex;
@@ -651,7 +598,7 @@ body {
   gap: 10px;
 }
 .powered-by {
-  font-size: 8px;
+  font-size: 7.5px;
   letter-spacing: 2.5px;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -663,9 +610,34 @@ body {
   align-items: center;
   gap: 8px;
 }
+
+/* logo in footer – hidden by default, shown if logo uploaded */
+.logo-placeholder {
+  width: 52px; height: 30px;
+  background: var(--orange-bg);
+  border: 1.5px solid rgba(255,107,0,0.3);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--orange);
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.logo-placeholder img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  display: none;
+}
+
 .brand-logo {
   font-family: 'Nunito', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--orange-dark);
   font-weight: 900;
   letter-spacing: 2px;
@@ -675,7 +647,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 12px;
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--text-mid);
   flex-wrap: wrap;
 }
@@ -685,7 +657,7 @@ body {
   gap: 4px;
   font-weight: 500;
 }
-.contact-icon { font-size: 11px; }
+.contact-icon { font-size: 10px; }
 
 /* ─── BOTTOM STRIPE ─── */
 .bottom-stripe {
@@ -700,8 +672,7 @@ body {
 /* ─── TOAST ─── */
 .toast {
   position: fixed;
-  bottom: 30px;
-  left: 50%;
+  bottom: 30px; left: 50%;
   transform: translateX(-50%) translateY(70px);
   background: linear-gradient(135deg, var(--orange-dark), var(--orange));
   color: #fff;
@@ -721,10 +692,10 @@ body {
 /* ─── RESPONSIVE ─── */
 @media (max-width: 720px) {
   body { flex-direction: column; align-items: center; padding: 12px; gap: 16px; }
-  .controls-panel { position: static; width: 100%; max-width: 360px; max-height: none; }
-  .standee-wrapper, .standee { width: 320px; }
-  .qr-img { width: 100px; height: 100px; }
-  .gallery-item { width: 48px; height: 48px; }
+  .controls-panel { position: static; width: 100%; max-width: 340px; max-height: none; }
+  .standee-wrapper, .standee { width: 310px; }
+  .qr-img { width: 115px; height: 115px; }
+  .gallery-item { width: 44px; height: 44px; }
 }
 
 /* ─── PRINT SAFE ─── */
@@ -805,29 +776,19 @@ body {
       <!-- TOP STRIPE -->
       <div class="top-stripe"></div>
 
-      <!-- HEADER -->
+      <!-- COMPACT HEADER — no logo, just branding text -->
       <div class="header-section">
-        <div class="header-inner">
-          <div class="header-logo-side">
-            <div class="logo-placeholder" id="logo-placeholder">
-              <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
-              <span id="logo-text">A&R</span>
-            </div>
-          </div>
-          <div class="header-divider"></div>
-          <div class="header-text-side">
-            <div class="scan-connect">Scan &amp; Connect</div>
-            <div class="subtitle">Everything in 1 Tap</div>
-          </div>
-        </div>
+        <div class="scan-connect">Scan &amp; Connect</div>
+        <div class="subtitle">Everything in 1 Tap</div>
         <div class="shop-name-pill" id="disp-shop">A&amp;R Mobile Store</div>
       </div>
 
       <!-- BODY -->
       <div class="standee-body">
 
-        <!-- QR SECTION -->
+        <!-- QR SECTION: SCAN NOW above, QR centered -->
         <div class="qr-section">
+          <div class="scan-now-badge">◈ SCAN NOW ◈</div>
           <div class="qr-card">
             <div class="qr-corner tl"></div>
             <div class="qr-corner tr"></div>
@@ -838,13 +799,9 @@ body {
               crossorigin="anonymous"
               alt="QR Code">
           </div>
-          <div class="qr-info">
-            <div class="scan-now-badge">◈ SCAN NOW ◈</div>
-            <div class="qr-tagline">
-              <span>Point your camera</span><br>
-              at the QR code to<br>connect instantly!
-            </div>
-            <div class="qr-arrow">👉</div>
+          <div class="qr-sub">
+            <span class="dot"></span>
+            Tap or scan to connect instantly
           </div>
         </div>
 
@@ -886,6 +843,10 @@ body {
         <div class="powered-row">
           <div class="powered-by">Powered By</div>
           <div class="footer-logo-wrap">
+            <!-- Logo thumbnail shown in footer if uploaded -->
+            <div class="logo-placeholder" id="logo-placeholder" style="display:none;">
+              <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
+            </div>
             <div class="brand-logo" id="disp-brand">A&amp;R Accessories</div>
           </div>
         </div>
@@ -1002,11 +963,11 @@ logoInput.addEventListener('change', (e) => {
 
 /* ─── RENDER STANDEE ─── */
 function renderStandee() {
-  const shop  = document.getElementById('inp-shop').value.trim();
+  const shop   = document.getElementById('inp-shop').value.trim();
   const qrLink = document.getElementById('inp-qr').value.trim() || 'https://example.com';
-  const brand = document.getElementById('inp-brand').value.trim();
-  const phone = document.getElementById('inp-phone').value.trim();
-  const email = document.getElementById('inp-email').value.trim();
+  const brand  = document.getElementById('inp-brand').value.trim();
+  const phone  = document.getElementById('inp-phone').value.trim();
+  const email  = document.getElementById('inp-email').value.trim();
 
   // Shop name
   const shopEl = document.getElementById('disp-shop');
@@ -1035,16 +996,16 @@ function renderStandee() {
     galleryRow.appendChild(div);
   }
 
-  // Logo
+  // Logo — shown in footer
   const standeeLogoImg = document.getElementById('logo-standee-img');
-  const logoText = document.getElementById('logo-text');
+  const logoPlaceholder = document.getElementById('logo-placeholder');
   if (uploadedLogoDataURL) {
     standeeLogoImg.src = uploadedLogoDataURL;
     standeeLogoImg.style.display = 'block';
-    logoText.style.display = 'none';
+    logoPlaceholder.style.display = 'flex';
   } else {
     standeeLogoImg.style.display = 'none';
-    logoText.style.display = 'block';
+    logoPlaceholder.style.display = 'none';
   }
 
   // Brand / contact
