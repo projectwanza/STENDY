@@ -622,22 +622,24 @@ body {
 
 /* Old .logo-placeholder replaced with clean circular logo wrapper — no border, no bg box */
 .logo-circle-wrap {
-  width: 44px;
-  height: 44px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  /* NO border, NO background, NO outline — clean circular crop only */
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(255,107,0,0.18);
 }
 .logo-circle-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;   /* fills circle perfectly */
+  object-fit: contain;   /* contain = logo fully visible, no crop */
   display: block;
   border-radius: 50%;
+  padding: 4px;           /* slight inner breathing room */
 }
 
 .brand-logo {
@@ -849,12 +851,16 @@ body {
       <!-- FOOTER -->
       <div class="footer-section">
         <div class="powered-row">
-  <div class="footer-logo-wrap">
-    <!-- Circular logo — no border, no "Powered By" label, no box outline -->
+  <div class="footer-logo-wrap" style="flex-direction:column; align-items:center; gap:5px;">
+    <!-- "Powered By" label — always visible above logo -->
+    <div class="powered-by" style="font-size:8px; letter-spacing:2.5px; color:var(--text-muted); text-transform:uppercase; font-weight:700; font-family:'Nunito',sans-serif;">
+      ✦ Powered By ✦
+    </div>
+    <!-- Circular logo -->
     <div class="logo-circle-wrap" id="logo-placeholder" style="display:none;">
       <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
     </div>
-    <!-- Brand name text remains as fallback when no logo is uploaded -->
+    <!-- Brand name text fallback when no logo uploaded -->
     <div class="brand-logo" id="disp-brand">A&amp;R Accessories</div>
   </div>
 </div>
