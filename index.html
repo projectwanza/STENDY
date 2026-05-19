@@ -624,24 +624,24 @@ body {
 
 /* Old .logo-placeholder replaced with clean circular logo wrapper — no border, no bg box */
 .logo-circle-wrap {
-  width: 52px;
+  width: 110px;          /* wide enough for any logo */
   height: 52px;
-  border-radius: 50%;
+  border-radius: 14px;   /* rounded card, NOT circle */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   background: var(--white);
-  box-shadow: 0 2px 10px rgba(255,107,0,0.15);
+  box-shadow: 0 3px 14px rgba(255,107,0,0.18);
+  padding: 6px 10px;     /* breathing room on sides */
 }
 .logo-circle-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: contain;   /* full logo visible, no crop */
   display: block;
-  border-radius: 50%;
-  padding: 3px;
+  border-radius: 0;      /* no circle clip on img */
 }
 
 .brand-logo {
@@ -853,16 +853,14 @@ body {
       <!-- FOOTER -->
       <div class="footer-section">
         <div class="powered-row">
-  <div class="footer-logo-wrap" style="flex-direction:column; align-items:center; gap:3px;">
-    <!-- "Powered By" label -->
+  <div class="footer-logo-wrap" style="flex-direction:column; align-items:center; gap:5px;">
     <div class="powered-by" style="font-size:7.5px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; font-weight:700; font-family:'Nunito',sans-serif;">
       ✦ Powered By ✦
     </div>
-    <!-- Circular logo — size reduced for tight professional look -->
+    <!-- Wide card logo — poora logo clearly visible -->
     <div class="logo-circle-wrap" id="logo-placeholder" style="display:none;">
       <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
     </div>
-    <!-- Brand name text fallback when no logo uploaded -->
     <div class="brand-logo" id="disp-brand">A&amp;R Accessories</div>
   </div>
 </div>
