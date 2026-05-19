@@ -338,18 +338,27 @@ body {
   margin-top: 2px;
   font-weight: 600;
 }
+/* Wrapper reserves fixed height so layout never collapses when name is empty */
+.shop-name-wrapper {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 7px;
+}
+
 .shop-name-pill {
   display: inline-block;
   font-size: 10.5px;
   color: var(--white);
   font-weight: 700;
-  margin-top: 7px;
   padding: 3px 14px;
   background: linear-gradient(90deg, var(--orange-dark), var(--orange));
   border-radius: 50px;
   letter-spacing: 1px;
   font-family: 'Nunito', sans-serif;
   box-shadow: 0 2px 8px rgba(255,107,0,0.30);
+  /* margin-top removed — handled by wrapper now */
 }
 
 /* ─── BODY ─── */
@@ -611,28 +620,24 @@ body {
   gap: 8px;
 }
 
-/* logo in footer – hidden by default, shown if logo uploaded */
-.logo-placeholder {
-  width: 52px; height: 30px;
-  background: var(--orange-bg);
-  border: 1.5px solid rgba(255,107,0,0.3);
-  border-radius: 7px;
+/* Old .logo-placeholder replaced with clean circular logo wrapper — no border, no bg box */
+.logo-circle-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
-  color: var(--orange);
-  overflow: hidden;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  letter-spacing: 1px;
-  box-shadow: var(--shadow-sm);
   flex-shrink: 0;
+  /* NO border, NO background, NO outline — clean circular crop only */
 }
-.logo-placeholder img {
-  max-width: 100%; max-height: 100%;
-  object-fit: contain;
-  display: none;
+.logo-circle-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* fills circle perfectly */
+  display: block;
+  border-radius: 50%;
 }
 
 .brand-logo {
@@ -780,7 +785,10 @@ body {
       <div class="header-section">
         <div class="scan-connect">Scan &amp; Connect</div>
         <div class="subtitle">Everything in 1 Tap</div>
-        <div class="shop-name-pill" id="disp-shop">A&amp;R Mobile Store</div>
+        <!-- Fixed-height wrapper ensures space is always reserved even when name is empty -->
+<div class="shop-name-wrapper">
+  <div class="shop-name-pill" id="disp-shop">A&amp;R Mobile Store</div>
+</div>
       </div>
 
       <!-- BODY -->
@@ -841,15 +849,15 @@ body {
       <!-- FOOTER -->
       <div class="footer-section">
         <div class="powered-row">
-          <div class="powered-by">Powered By</div>
-          <div class="footer-logo-wrap">
-            <!-- Logo thumbnail shown in footer if uploaded -->
-            <div class="logo-placeholder" id="logo-placeholder" style="display:none;">
-              <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
-            </div>
-            <div class="brand-logo" id="disp-brand">A&amp;R Accessories</div>
-          </div>
-        </div>
+  <div class="footer-logo-wrap">
+    <!-- Circular logo — no border, no "Powered By" label, no box outline -->
+    <div class="logo-circle-wrap" id="logo-placeholder" style="display:none;">
+      <img id="logo-standee-img" src="" alt="Logo" crossorigin="anonymous">
+    </div>
+    <!-- Brand name text remains as fallback when no logo is uploaded -->
+    <div class="brand-logo" id="disp-brand">A&amp;R Accessories</div>
+  </div>
+</div>
         <div class="orange-divider" style="width:80%;"></div>
         <div class="contact-row">
           <div class="contact-item">
@@ -969,10 +977,11 @@ function renderStandee() {
   const phone  = document.getElementById('inp-phone').value.trim();
   const email  = document.getElementById('inp-email').value.trim();
 
-  // Shop name
-  const shopEl = document.getElementById('disp-shop');
-  shopEl.textContent = shop || 'Your Shop';
-  shopEl.style.display = shop ? 'inline-block' : 'none';
+  // Shop name — use visibility instead of display so wrapper height is always preserved
+const shopEl = document.getElementById('disp-shop');
+shopEl.textContent = shop || '\u00A0'; // non-breaking space keeps pill height consistent
+shopEl.style.visibility = shop ? 'visible' : 'hidden';
+shopEl.style.display = 'inline-block';
 
   // QR — white bg, orange QR color
   const qrImg = document.getElementById('qr-img');
@@ -996,17 +1005,20 @@ function renderStandee() {
     galleryRow.appendChild(div);
   }
 
-  // Logo — shown in footer
-  const standeeLogoImg = document.getElementById('logo-standee-img');
-  const logoPlaceholder = document.getElementById('logo-placeholder');
-  if (uploadedLogoDataURL) {
-    standeeLogoImg.src = uploadedLogoDataURL;
-    standeeLogoImg.style.display = 'block';
-    logoPlaceholder.style.display = 'flex';
-  } else {
-    standeeLogoImg.style.display = 'none';
-    logoPlaceholder.style.display = 'none';
-  }
+  // Logo — circular in footer, hide brand name text when logo is present
+const standeeLogoImg = document.getElementById('logo-standee-img');
+const logoPlaceholder = document.getElementById('logo-placeholder');
+const brandLogoText   = document.getElementById('disp-brand');
+if (uploadedLogoDataURL) {
+  standeeLogoImg.src = uploadedLogoDataURL;
+  standeeLogoImg.style.display = 'block';
+  logoPlaceholder.style.display = 'flex';
+  brandLogoText.style.display = 'none';   // hide text name when logo exists
+} else {
+  standeeLogoImg.style.display = 'none';
+  logoPlaceholder.style.display = 'none';
+  brandLogoText.style.display = 'block';  // show text name as fallback
+}
 
   // Brand / contact
   document.getElementById('disp-brand').textContent = brand || '';
